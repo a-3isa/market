@@ -6,7 +6,7 @@ const path = require("path");
 const userRouter = Router();
 const userController = new UserController();
 // Make sure the method name matches the actual export in products_controller
-userRouter.post("/user", authController.signup);
+userRouter.post("/signup", authController.signup);
 userRouter.post("/login", authController.login);
 userRouter.post("/follow", authController.protect, userController.followUser);
 // userRouter.post("/", userController.createUser);
