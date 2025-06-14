@@ -1,0 +1,10 @@
+import express from "express";
+import productRouter from "./routes/products_routes";
+import userRouter from "./routes/users_routes";
+import dotenv from "dotenv";
+dotenv.config();
+const app = express();
+app.use(express.json());
+app.use("/user", userRouter);
+app.use("/product", productRouter);
+app.listen(3000);
