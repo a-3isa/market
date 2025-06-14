@@ -12,6 +12,6 @@ productRouter.post(
   productController.createProduct
 );
 // router.get("/:id", fetechJson);
-productRouter.get("/", productController.getProducts);
+productRouter.get("/", authController.protect, productController.getProducts);
 
 export default productRouter;

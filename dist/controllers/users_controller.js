@@ -15,10 +15,10 @@ class UserController {
         this.followUser = async (req, res) => {
             const follower = req.user;
             console.log(req.body);
-            const { user_id } = req.body;
+            const { following_id } = req.body;
             try {
-                const insertUser = "INSERT INTO user_followers (user_id, follower_id) VALUES ($1, $2) RETURNING *";
-                const result = await pool.query(insertUser, [user_id, follower.id]);
+                const insertUser = "INSERT INTO followers (following_id, follower_id) VALUES ($1, $2) RETURNING *";
+                const result = await pool.query(insertUser, [following_id, follower.id]);
                 const createdUser = result.rows[0];
                 res.json(createdUser);
             }

@@ -9,5 +9,5 @@ const productController = new products_controller_1.ProductController();
 // Make sure the method name matches the actual export in products_controller
 productRouter.post("/", auth_controller_1.authController.protect, productController.createProduct);
 // router.get("/:id", fetechJson);
-productRouter.get("/", productController.getProducts);
+productRouter.get("/", auth_controller_1.authController.protect, productController.getProducts);
 exports.default = productRouter;

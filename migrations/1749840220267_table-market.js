@@ -64,6 +64,28 @@ exports.up = (pgm) => {
       default: pgm.func("current_timestamp"),
     },
   });
+
+  pgm.createTable("product_options", {
+    id: { type: "serial", primaryKey: true },
+    product_id: {
+      type: "integer",
+      references: "products(id)",
+      onDelete: "cascade",
+      notNull: true,
+    },
+    name: { type: "varchar(100)", notNull: true }, // e.g., "Size", "Color"
+  });
+
+  pgm.createTable("product_option_values", {
+    id: { type: "serial", primaryKey: true },
+    option_id: {
+      type: "integer",
+      references: "product_options(id)",
+      onDelete: "cascade",
+      notNull: true,
+    },
+    value: { type: "varchar(100)", notNull: true }, // e.g., "S", "M", "Red"
+  });
 };
 
 /**
