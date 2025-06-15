@@ -12,8 +12,8 @@ productRouter.post(
   productController.createProduct
 );
 // router.get("/:id", fetechJson);
-// productRouter.get("/", authController.protect, productController.getProducts);
-productRouter.get("/", productController.getProducts);
+productRouter.get("/", authController.protect, productController.getProducts);
+// productRouter.get("/", productController.getProducts);
 productRouter.delete(
   "/",
   authController.protect,
