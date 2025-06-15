@@ -94,8 +94,10 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
+  pgm.dropTable("product_option_values");
+  pgm.dropTable("product_options");
   pgm.dropTable("products");
-  pgm.dropConstraint("user_followers", "user_follower_pk");
-  pgm.dropTable("user_followers");
+  pgm.dropConstraint("followers", "user_follower_pk");
+  pgm.dropTable("followers");
   pgm.dropTable("users");
 };
