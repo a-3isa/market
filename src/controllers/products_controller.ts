@@ -1,17 +1,25 @@
 import { Request, Response } from "express";
-import { Pool } from "pg";
+import path from "path";
+import dotenv from "dotenv";
+import { pool } from "../pool";
+// console.log("eisa");
+// dotenv.config({ path: path.resolve(__dirname, "../config.env") });
 
-const pool = new Pool({
-  host: "localhost",
-  user: "postgres",
-  password: "0000",
-  database: "market",
-  port: 5432,
-  idleTimeoutMillis: 30000,
-});
+// console.log(process.env.DATABASE_USER);
+
+// const pool = new Pool({
+//   host: process.env.DATABASE_LOCAL,
+//   user: process.env.DATABASE_USER,
+//   password: "0000",
+//   database: "market",
+//   port: 5432,
+//   idleTimeoutMillis: 3000,
+// });
 
 export class ProductController {
   createProduct = async (req: Request, res: Response) => {
+    console.log(process.env.DATABASE_USER);
+
     const user = (req as any).user;
     if ("admin" !== user.role) {
       throw new Error("You do not have permission to perform this action");
@@ -60,9 +68,6 @@ export class ProductController {
 
       if (role === "admin") {
         productsQuery = "SELECT * FROM products;";
-        // const result = await pool.query("SELECT * FROM products;");
-        // res.json(result.rows);
-        // return;
       } else {
         productsQuery = `SELECT id, name, image, price FROM products;`;
       }
@@ -113,6 +118,28 @@ export class ProductController {
       res.json(finalProducts);
     } catch (error) {
       console.error("Error fetching client products:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  };
+  deleteProduct = async (req: Request, res: Response) => {
+    try {
+      const role = (req as any).user.role;
+      let productsQuery;
+
+      if ("admin" !== role) {
+        throw new Error("You do not have permission to perform this action");
+      }
+
+      // For clients: fetch limited fields
+      const deleteQuery = `DELETE FROM products WHERE product_id = $1`;
+
+      const productsResult = await pool.query(deleteQuery, [
+        req.body.product_id,
+      ]);
+
+      res.json("Product was deleted");
+    } catch (error) {
+      console.error("Error deleting product:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   };

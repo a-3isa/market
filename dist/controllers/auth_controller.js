@@ -5,15 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authController = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const pg_1 = require("pg");
-const pool = new pg_1.Pool({
-    host: "localhost",
-    user: "postgres",
-    password: "0000",
-    database: "market",
-    port: 5432,
-    idleTimeoutMillis: 30000,
-});
+const pool_1 = require("../pool");
+// const pool = new Pool({
+//   host: "localhost",
+//   user: "postgres",
+//   password: "0000",
+//   database: "market",
+//   port: 5432,
+//   idleTimeoutMillis: 30000,
+// });
 const signToken = (id) => {
     const JWT_SECRET = "ahmed";
     const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
@@ -41,7 +41,7 @@ class AuthController {
         this.signup = async (req, res, next) => {
             const { name, role, password } = req.body;
             const insertUser = "INSERT INTO users (name, role,password) VALUES ($1, $2,$3) RETURNING *";
-            const result = await pool.query(insertUser, [name, role, password]);
+            const result = await pool_1.pool.query(insertUser, [name, role, password]);
             createSendToken(result.rows[0].id, 201, res);
         };
         this.login = async (req, res, next) => {
@@ -53,7 +53,7 @@ class AuthController {
             // 2) Check if user exists && password is correct
             // const user = await User.findOne({ email }).select("+password");
             const user = "SELECT * FROM users WHERE name = $1";
-            const result = await pool.query(user, [name]);
+            const result = await pool_1.pool.query(user, [name]);
             if (!result || !(result.rows[0].password == password)) {
                 throw new Error("Incorrect email or password");
             }
@@ -77,7 +77,7 @@ class AuthController {
             // 3) Check if user still exists
             // const currentUser = await User.findById(decoded.id);
             const currentUser = "SELECT * FROM users WHERE id = $1";
-            const result = await pool.query(currentUser, [decoded._id]);
+            const result = await pool_1.pool.query(currentUser, [decoded._id]);
             if (!result) {
                 throw new Error("The user belonging to this token does no longer exist.");
             }
