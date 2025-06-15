@@ -49,13 +49,14 @@ class ProductController {
         };
         this.getProducts = async (req, res) => {
             try {
-                // const role = (req as any).user.role;
+                const role = req.user.role;
                 let productsQuery;
-                // if (role === "admin") {
-                //   productsQuery = "SELECT * FROM products;";
-                // } else {
-                productsQuery = `SELECT id, name, image, price FROM products;`;
-                // }
+                if (role === "admin") {
+                    productsQuery = "SELECT * FROM products;";
+                }
+                else {
+                    productsQuery = `SELECT id, name, image, price FROM products;`;
+                }
                 // For clients: fetch limited fields
                 const productsResult = await pool_1.pool.query(productsQuery);
                 const products = productsResult.rows;
