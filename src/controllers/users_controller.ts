@@ -1,14 +1,15 @@
 import { Request, RequestHandler, Response } from "express";
 import { Pool } from "pg";
+import { pool } from "../pool";
 
-const pool = new Pool({
-  host: "localhost",
-  user: "postgres",
-  password: "0000",
-  database: "market",
-  port: 5432,
-  idleTimeoutMillis: 30000,
-});
+// const pool = new Pool({
+//   host: "localhost",
+//   user: "postgres",
+//   password: "0000",
+//   database: "market",
+//   port: 5432,
+//   idleTimeoutMillis: 30000,
+// });
 
 export class UserController {
   followUser: RequestHandler = async (req: Request, res: Response) => {
