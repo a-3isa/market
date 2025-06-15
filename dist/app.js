@@ -9,6 +9,7 @@ const users_routes_1 = __importDefault(require("./routes/users_routes"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const pool_1 = require("./pool");
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config({ path: path_1.default.resolve(__dirname, "../config.env") });
 pool_1.pool.connect({
     host: process.env.DATABASE_LOCAL,
@@ -20,6 +21,7 @@ pool_1.pool.connect({
 });
 // console.log(process.env);
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use("/user", users_routes_1.default);
 app.use("/product", products_routes_1.default);

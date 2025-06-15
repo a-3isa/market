@@ -4,6 +4,8 @@ import userRouter from "./routes/users_routes";
 import dotenv from "dotenv";
 import path from "path";
 import { pool } from "./pool";
+import cors from "cors";
+
 dotenv.config({ path: path.resolve(__dirname, "../config.env") });
 pool.connect({
   host: process.env.DATABASE_LOCAL,
@@ -15,6 +17,8 @@ pool.connect({
 });
 // console.log(process.env);
 const app = express();
+app.use(cors());
+
 app.use(express.json());
 app.use("/user", userRouter);
 app.use("/product", productRouter);
