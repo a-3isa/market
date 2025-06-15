@@ -63,14 +63,14 @@ export class ProductController {
   };
   getProducts = async (req: Request, res: Response) => {
     try {
-      const role = (req as any).user.role;
+      // const role = (req as any).user.role;
       let productsQuery;
 
-      if (role === "admin") {
-        productsQuery = "SELECT * FROM products;";
-      } else {
-        productsQuery = `SELECT id, name, image, price FROM products;`;
-      }
+      // if (role === "admin") {
+      //   productsQuery = "SELECT * FROM products;";
+      // } else {
+      productsQuery = `SELECT id, name, image, price FROM products;`;
+      // }
 
       // For clients: fetch limited fields
 
@@ -121,6 +121,7 @@ export class ProductController {
       res.status(500).json({ error: "Internal Server Error" });
     }
   };
+
   deleteProduct = async (req: Request, res: Response) => {
     try {
       const role = (req as any).user.role;

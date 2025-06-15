@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auth Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 350px;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 1rem;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+    }
+
+    .success {
+      color: green;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="formTitle">Login</h2>
+    <div id="form">
+      <input type="text" id="name" placeholder="name" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button onclick="submitForm()">Submit</button>
+      <div class="error" id="errorMsg"></div>
+      <div class="success" id="successMsg"></div>
+      <div class="switch" onclick="toggleForm()">Don't have an account? Sign up</div>
+    </div>
+  </div>
+
+  <script>
+    let isLogin = true;
+
+    function toggleForm() {
+      isLogin = !isLogin;
+      const title = document.getElementById("formTitle");
+      const usernameField = document.getElementById("username");
+      const switchText = document.querySelector(".switch");
+
+      document.getElementById("errorMsg").textContent = "";
+      document.getElementById("successMsg").textContent = "";
+
+      if (isLogin) {
+        title.textContent = "Login";
+        usernameField.style.display = "none";
+        switchText.textContent = "Don't have an account? Sign up";
+      } else {
+        title.textContent = "Sign Up";
+        usernameField.style.display = "block";
+        switchText.textContent = "Already have an account? Login";
+      }
+    }
+
+    async function submitForm() {
+  const password = document.getElementById("password").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const errorMsg = document.getElementById("errorMsg");
+  const successMsg = document.getElementById("successMsg");
+
+  errorMsg.textContent = "";
+  successMsg.textContent = "";
+
+  const endpoint = isLogin ? '/login' : '/signup';
+  const body ={ name, password }
+  
+
+  try {
+    const res = await fetch(`http://127.0.0.1:3000/user${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || 'Something went wrong');
+
+    successMsg.textContent = data.message || (isLogin ? 'Login successful!' : 'Signup successful!');
+
+    // ✅ Redirect after login
+    if (isLogin) {
+      setTimeout(() => {
+        window.location.href = '/catalog.html';  // Change this to your actual catalog page
+      }, 1000); // Optional delay to show message
+    }
+
+  } catch (error) {
+    errorMsg.textContent = error.message;
+  }
+}
+
+  </script>
+</body>
+</html>
