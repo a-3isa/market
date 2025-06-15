@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Display</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 1rem;
+      margin-bottom: 2rem;
+      max-width: 300px;
+    }
+    .product-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .product-name {
+      font-size: 1.3rem;
+      margin-top: 0.5rem;
+    }
+    .product-price {
+      color: green;
+      font-weight: bold;
+    }
+    .option {
+      margin-top: 1rem;
+    }
+    .option label {
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .option select {
+      width: 100%;
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>Product Catalog</h2>
+  <div id="product-container">Loading...</div>
+
+  <script>
+    async function loadProducts() {
+      const container = document.getElementById('product-container');
+      container.innerHTML = 'Loading...';
+
+      try {
+        // Replace this URL with your actual API endpoint
+        const response = await fetch('http://127.0.0.1:3000/product/');
+        const products = await response.json();
+        container.innerHTML = '';
+
+        products.forEach(product => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+
+          card.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" />
+            <div class="product-name">${product.name}</div>
+            <div class="product-price">$${product.price}</div>
+          `;
+
+          product.options.forEach(option => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option';
+
+            const label = document.createElement('label');
+            label.textContent = option.name;
+
+            const select = document.createElement('select');
+            option.values.forEach(value => {
+              const opt = document.createElement('option');
+              opt.value = value;
+              opt.textContent = value;
+              select.appendChild(opt);
+            });
+
+            optionDiv.appendChild(label);
+            optionDiv.appendChild(select);
+            card.appendChild(optionDiv);
+          });
+
+          container.appendChild(card);
+        });
+
+      } catch (error) {
+        container.innerHTML = '<p style="color:red;">Failed to load products.</p>';
+        console.error(error);
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
