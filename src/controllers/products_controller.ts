@@ -124,18 +124,14 @@ export class ProductController {
   deleteProduct = async (req: Request, res: Response) => {
     try {
       const role = (req as any).user.role;
-      let productsQuery;
-
       if ("admin" !== role) {
         throw new Error("You do not have permission to perform this action");
       }
 
       // For clients: fetch limited fields
-      const deleteQuery = `DELETE FROM products WHERE product_id = $1`;
+      const deleteQuery = `DELETE FROM products WHERE id = $1`;
 
-      const productsResult = await pool.query(deleteQuery, [
-        req.body.product_id,
-      ]);
+      const productsResult = await pool.query(deleteQuery, [req.body.id]);
 
       res.json("Product was deleted");
     } catch (error) {
