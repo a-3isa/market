@@ -12,11 +12,11 @@ productRouter.post(
   productController.createProduct
 );
 // router.get("/:id", fetechJson);
-// productRouter.get("/", authController.protect, productController.getProducts);
-// productRouter.delete(
-//   "/",
-//   authController.protect,
-//   productController.deleteProduct
-// );
+productRouter.get("/", authController.protect, productController.getProducts);
+productRouter.delete(
+  "/",
+  authController.protect,
+  productController.deleteProduct
+);
 
 export default productRouter;
