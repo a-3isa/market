@@ -1,86 +1,46 @@
-# 🛒 Product Catalog Web App
+# Market
 
-This is a simple web app with **login/signup** functionality and a **product catalog** page, powered by a PostgreSQL database and a TypeScript backend.
+A small product-catalogue backend with user signup/login, built with Express 5, TypeScript and PostgreSQL. Authentication uses JSON Web Tokens; schema changes are managed with `node-pg-migrate`.
 
----
+## Tech stack
 
-## 🚀 Setup Instructions
+TypeScript, Node.js, Express 5, PostgreSQL (`pg`), `node-pg-migrate`, `jsonwebtoken`.
 
-1. **Clone the Repository**
+## Getting started
+
+Prerequisites: Node.js 18+, PostgreSQL.
 
 ```bash
 git clone https://github.com/a-3isa/market.git
-```
-
-2. **Install Dependencies**
-
-```bash
+cd market
 npm install
 ```
 
-3. **Configure the Database**
+Create a database named `market`, then provide your own configuration. Replace every value, and never reuse the development defaults committed in `config.env`:
 
-Make sure you have PostgreSQL installed and running locally.
-
-Set the environment variable `DATABASE_URL` (you can use `dotenv` or pass inline):
-
-```bash
-DATABASE_URL=postgres://<USERNAME>:<PASSWORD>@localhost:<PORT>/market
+```env
+PORT=3000
+DATABASE_URL=postgres://<user>:<password>@localhost:5432/market
+JWT_SECRET=<long random string>
+JWT_EXPIRES_IN=90d
 ```
 
-> ⚠️ Replace `USERNAME` , `PASSWORD` , `PORT` with your actual PostgreSQL cardinals if it's different.
-
-4. **Run Database Migrations**
+`PORT` is the API server port, not PostgreSQL's 5432 (that belongs in `DATABASE_URL`).
 
 ```bash
 npm run migrate up
-```
-
-> This will create the required tables in your `market` database.
-
-5. **Start the Backend Server**
-
-```bash
 npm start
 ```
 
-> This will start your API server on `http://localhost:3000`.
-
-6. **Serve the Frontend**
-
-If your frontend is static (like plain HTML/JS), run:
-
-```bash
-http-server .
-```
-
-Then open your browser and go to:
+## Project layout
 
 ```
-http://localhost:8080
+src/            Express app, routes and controllers (TypeScript)
+migrations/     node-pg-migrate migrations
+package.json
+tsconfig.json
 ```
 
----
+## Status
 
-## 📁 Project Structure
-
-```
-├── index.html         # Login/Signup UI
-├── catalog.html       # Product catalog UI
-├── backend/           # TypeScript backend code
-│   ├── index.ts
-│   └── routes/
-├── migrations/        # DB migrations
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
----
-
-## 📦 Tech Stack
-
-- TypeScript (Node.js)
-- PostgreSQL
-- Plain HTML/CSS/JS (Frontend)
-- `http-server` for static serving
+A learning project covering authentication, a relational schema and migrations. The UI is minimal.
