@@ -2,6 +2,7 @@ import { RequestHandler, Response } from "express";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { Pool } from "pg";
 import { pool } from "../pool";
+import { hashPassword, verifyPassword } from "../passwords";
 
 // const pool = new Pool({
 //   host: "localhost",
@@ -12,8 +13,16 @@ import { pool } from "../pool";
 //   idleTimeoutMillis: 30000,
 // });
 
+// Tokens are signed and checked with JWT_SECRET from config.env; there is no
+// built-in fallback, because a key in the source can be read by anyone.
+const jwtSecret = (): Secret => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET is not set (see config.env.example)");
+  return secret;
+};
+
 const signToken = (id: string): string => {
-  const JWT_SECRET: Secret = "REDACTED_HARDCODED_JWT_KEY";
+  const JWT_SECRET: Secret = jwtSecret();
   const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN!;
 
   return jwt.sign({ _id: id }, JWT_SECRET, {
@@ -41,10 +50,19 @@ const createSendToken = (id: any, statusCode: number, res: Response) => {
 
 class AuthController {
   signup: RequestHandler = async (req, res, next) => {
-    const { name, role, password } = req.body;
+    // Everyone who signs up is a client; admins are promoted in the database.
+    // The password is stored as a salted scrypt hash, never as sent.
+    const { name, password } = req.body;
+    if (!name || !password) {
+      throw new Error("Please provide a name and password!");
+    }
     const insertUser =
-      "INSERT INTO users (name, role,password) VALUES ($1, $2,$3) RETURNING *";
-    const result = await pool.query(insertUser, [name, role, password]);
+      "INSERT INTO users (name, role,password) VALUES ($1, $2,$3) RETURNING id";
+    const result = await pool.query(insertUser, [
+      name,
+      "client",
+      await hashPassword(password),
+    ]);
 
     createSendToken(result.rows[0].id, 201, res);
   };
@@ -61,7 +79,8 @@ class AuthController {
     const user = "SELECT * FROM users WHERE name = $1";
     const result = await pool.query(user, [name]);
 
-    if (!result || !(result.rows[0].password == password)) {
+    const found = result.rows[0];
+    if (!found || !(await verifyPassword(password, found.password))) {
       throw new Error("Incorrect email or password");
     }
 
@@ -87,7 +106,7 @@ class AuthController {
     // 2) Verification token
     const decoded: JwtPayload = (await jwt.verify(
       token,
-      "ahmed"
+      jwtSecret()
     )) as JwtPayload;
     // console.log(decoded);
 
@@ -95,7 +114,7 @@ class AuthController {
     // const currentUser = await User.findById(decoded.id);
     const currentUser = "SELECT * FROM users WHERE id = $1";
     const result = await pool.query(currentUser, [decoded._id]);
-    if (!result) {
+    if (!result.rows[0]) {
       throw new Error("The user belonging to this token does no longer exist.");
     }
     // 4) Check if user changed password after the token was issued
