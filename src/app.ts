@@ -7,6 +7,10 @@ import { pool } from "./pool";
 import cors from "cors";
 
 dotenv.config({ path: path.resolve(__dirname, "../config.env") });
+
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET is not set (see config.env.example)");
+}
 pool.connect({
   host: process.env.DATABASE_LOCAL,
   user: process.env.DATABASE_USER,
