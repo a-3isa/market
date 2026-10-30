@@ -1,5 +1,7 @@
 # Market
 
+[![CI](https://github.com/a-3isa/market/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/a-3isa/market/actions/workflows/ci.yml)
+
 A small product-catalogue API built with Express 5, TypeScript and PostgreSQL: users sign up and log in with JSON Web Tokens, admins manage products with options (size, colour, ...), and users can follow each other. Schema changes are managed with `node-pg-migrate`.
 
 ## Features
