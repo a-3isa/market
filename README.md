@@ -29,7 +29,7 @@ JWT_EXPIRES_IN=90d
 
 ```bash
 npm run migrate up
-npm start
+npm start        # compiles src/ to dist/ first (prestart)
 ```
 
 ## Project layout

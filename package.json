@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "migrate": "node-pg-migrate",
-    "start": "nodemon dist/app.js"
+    "start": "nodemon dist/app.js",
+    "build": "tsc",
+    "prestart": "tsc"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/pg": "^8.15.4"
+    "@types/pg": "^8.15.4",
+    "typescript": "^7.0.2"
   }
 }
