@@ -1,16 +1,24 @@
 {
   "name": "market_typescript",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Express 5 + TypeScript + PostgreSQL catalogue API: products with options, JWT auth with admin and client roles, followers",
+  "author": "Ahmed Ibrahim Hussien (https://github.com/a-3isa)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a-3isa/market.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "migrate": "node-pg-migrate",
     "start": "nodemon dist/app.js",
     "build": "tsc",
-    "prestart": "tsc"
+    "prestart": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.1",
